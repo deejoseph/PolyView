@@ -1,0 +1,183 @@
+:root {
+  --bg: #f3efe6;
+  --paper: #fffaf2;
+  --ink: #1f2b2a;
+  --muted: #6a756f;
+  --line: #d7cfc0;
+  --accent: #6d8d87;
+  --accent-strong: #274a48;
+  --shadow: 0 14px 40px rgba(31, 43, 42, 0.08);
+  --radius: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "PingFang SC", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(109, 141, 135, 0.18), transparent 32%),
+    linear-gradient(180deg, #ece4d7 0%, var(--bg) 100%);
+}
+
+.shell {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+.hero {
+  padding: 8px 4px 24px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  color: var(--accent-strong);
+}
+
+h1, h2, p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(30px, 5vw, 56px);
+  line-height: 0.95;
+}
+
+.lede {
+  margin-top: 14px;
+  max-width: 720px;
+  color: var(--muted);
+}
+
+.panel {
+  margin-top: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+}
+
+.card {
+  background: rgba(255, 250, 242, 0.92);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.badge {
+  background: var(--accent-strong);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+label {
+  display: block;
+  margin: 14px 0 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+select,
+textarea,
+button,
+input[type="range"] {
+  width: 100%;
+}
+
+select,
+textarea,
+button {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink);
+}
+
+select,
+button {
+  min-height: 44px;
+  padding: 0 14px;
+}
+
+textarea,
+pre {
+  padding: 14px;
+  font: 13px/1.55 "Consolas", "SFMono-Regular", monospace;
+}
+
+textarea {
+  min-height: 280px;
+  resize: vertical;
+}
+
+pre {
+  margin: 0;
+  min-height: 160px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #f6f2ea;
+}
+
+output {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--accent-strong);
+  font-size: 13px;
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+button {
+  cursor: pointer;
+  background: var(--accent-strong);
+  color: white;
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--accent-strong);
+}
+
+.paths {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.paths li + li {
+  margin-top: 8px;
+}
+
+code {
+  font-family: "Consolas", monospace;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

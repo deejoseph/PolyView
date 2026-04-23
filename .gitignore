@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+logs/*.log
+output/total/*
+output/single/*
+output/contact_sheets/*
+!output/total/.gitkeep
+!output/single/.gitkeep
+!output/contact_sheets/.gitkeep
+input/*
+!input/.gitkeep
