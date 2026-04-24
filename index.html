@@ -1,51 +1,62 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PolyView</title>
+  <link rel="icon" type="image/x-icon" href="./PolyView_icon.ico">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <main class="shell">
     <section class="hero">
-      <p class="eyebrow">PolyView</p>
-      <h1>Multi-Angle Prompt Workbench</h1>
-      <p class="lede">First-pass prompt and view control UI for the ComfyUI <code>PolyView</code> node.</p>
+      <div class="brand">
+        <img class="brand-logo" src="./PolyView.png" alt="PolyView Logo">
+        <div class="brand-copy">
+          <p class="eyebrow">PolyView</p>
+          <h1>青瓷多角度生成台</h1>
+          <p class="lede">上传基础图，选择模式，分别设置四个标准产品视角，并直接从本地 ComfyUI 工作流生成总图和单角度图。</p>
+        </div>
+      </div>
     </section>
 
     <section class="panel grid">
       <div class="card">
-        <label for="mode">Mode</label>
+        <label for="mode">模式预设</label>
         <select id="mode"></select>
 
-        <label for="horizontal">Horizontal Angle</label>
-        <input id="horizontal" type="range" min="0" max="360" step="1" value="0">
-        <output id="horizontalValue">0</output>
+        <label for="imageUpload">上传基础图像</label>
+        <input id="imageUpload" type="file" accept="image/*">
+        <p class="hint">图片会自动写入项目 input 和 ComfyUI input，无需回到 ComfyUI 手动加载。</p>
 
-        <label for="vertical">Vertical Angle</label>
-        <input id="vertical" type="range" min="-90" max="90" step="1" value="0">
-        <output id="verticalValue">0</output>
-
-        <label for="zoom">Zoom</label>
-        <input id="zoom" type="range" min="0.1" max="4" step="0.05" value="1">
-        <output id="zoomValue">1.00</output>
+        <div class="upload-preview">
+          <img id="uploadPreview" alt="上传预览">
+          <div id="uploadEmpty" class="empty-state">请选择一张待生成的基础图像</div>
+        </div>
 
         <div class="action-row">
-          <button id="copyPrompt" type="button">Copy Prompt</button>
-          <button id="resetView" type="button" class="ghost">Reset View</button>
+          <button id="generateButton" type="button">开始生成</button>
+          <button id="resetViews" type="button" class="ghost">恢复预设</button>
         </div>
+
+        <div id="statusBox" class="status-box status-idle">等待任务</div>
       </div>
 
       <div class="card">
         <div class="section-head">
-          <h2>Prompt Template</h2>
+          <h2>正向 Prompt</h2>
           <span id="modeBadge" class="badge">Celadon</span>
         </div>
-        <textarea id="promptText" rows="12"></textarea>
+        <textarea id="promptText" rows="8"></textarea>
 
         <div class="section-head">
-          <h2>Node Payload Preview</h2>
+          <h2>负向 Prompt</h2>
+          <button id="copyPrompt" type="button" class="mini-button">复制正向词</button>
+        </div>
+        <textarea id="negativePromptText" rows="6"></textarea>
+
+        <div class="section-head">
+          <h2>提交参数预览</h2>
         </div>
         <pre id="payloadPreview"></pre>
       </div>
@@ -54,14 +65,55 @@
     <section class="panel">
       <div class="card">
         <div class="section-head">
-          <h2>Project Paths</h2>
+          <div>
+            <h2>四视图控制</h2>
+            <p class="subhead">分别设置四个标准产品视角：正面主视、背面视图、顶视图、三分之四视图。</p>
+          </div>
+          <button id="refreshGallery" type="button" class="mini-button">刷新结果</button>
+        </div>
+        <div id="viewControls" class="view-controls"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="card">
+        <div class="section-head">
+          <h2>生成结果</h2>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-block">
+            <h3>总图</h3>
+            <img id="totalPreview" alt="总图预览">
+            <div id="totalEmpty" class="empty-state">尚未生成总图</div>
+          </div>
+
+          <div class="result-block">
+            <h3>Contact Sheet</h3>
+            <img id="sheetPreview" alt="Contact Sheet 预览">
+            <div id="sheetEmpty" class="empty-state">尚未生成 Contact Sheet</div>
+          </div>
+        </div>
+
+        <div class="section-head section-head-tight">
+          <h2>单角度图片</h2>
+        </div>
+        <div id="singleGallery" class="single-gallery"></div>
+        <div id="singleEmpty" class="empty-state">尚未生成单角度图片</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="card">
+        <div class="section-head">
+          <h2>输出目录</h2>
         </div>
         <ul class="paths">
-          <li><strong>Input:</strong> <code>D:\PixelSmile\celadon-lab\input</code></li>
-          <li><strong>Total Output:</strong> <code>D:\PixelSmile\celadon-lab\output\total</code></li>
-          <li><strong>Single Output:</strong> <code>D:\PixelSmile\celadon-lab\output\single</code></li>
-          <li><strong>Contact Sheets:</strong> <code>D:\PixelSmile\celadon-lab\output\contact_sheets</code></li>
-          <li><strong>Logs:</strong> <code>D:\PixelSmile\celadon-lab\logs</code></li>
+          <li><strong>项目输入</strong> <code>D:\PixelSmile\celadon-lab\input</code></li>
+          <li><strong>总图输出</strong> <code>D:\PixelSmile\celadon-lab\output\total</code></li>
+          <li><strong>单图输出</strong> <code>D:\PixelSmile\celadon-lab\output\single</code></li>
+          <li><strong>拼接图输出</strong> <code>D:\PixelSmile\celadon-lab\output\contact_sheets</code></li>
+          <li><strong>日志输出</strong> <code>D:\PixelSmile\celadon-lab\logs</code></li>
         </ul>
       </div>
     </section>
