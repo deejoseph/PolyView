@@ -15,7 +15,7 @@
         <div class="brand-copy">
           <p class="eyebrow">PolyView</p>
           <h1>青瓷多角度生成台</h1>
-          <p class="lede">上传基础图，选择模式，分别设置四个标准产品视角，并直接从本地 ComfyUI 工作流生成总图和单角度图。</p>
+          <p class="lede">上传基础图，选择模式，分别设置五或六个标准产品视角，并直接从本地 ComfyUI 工作流生成总图和单角度图。</p>
         </div>
       </div>
     </section>
@@ -35,9 +35,10 @@
         </div>
 
         <div class="action-row">
-          <button id="generateButton" type="button">开始生成</button>
+          <button id="generateButton" type="button">完整生成（全部视角）</button>
           <button id="resetViews" type="button" class="ghost">恢复预设</button>
         </div>
+        <p class="hint" style="margin-top: 8px; color: #6a756f;">💡 提示：如需单独调整某个视角，请在下方的「5/6视图控制」区域使用各自的「单独生成」按钮。</p>
 
         <div id="statusBox" class="status-box status-idle">等待任务</div>
       </div>
@@ -51,7 +52,10 @@
 
         <div class="section-head">
           <h2>负向 Prompt</h2>
-          <button id="copyPrompt" type="button" class="mini-button">复制正向词</button>
+          <div>
+            <button id="copyPrompt" type="button" class="mini-button">复制正向词</button>
+            <button id="copyNegative" type="button" class="mini-button" style="margin-left: 8px;">复制负向词</button>
+          </div>
         </div>
         <textarea id="negativePromptText" rows="6"></textarea>
 
@@ -66,8 +70,8 @@
       <div class="card">
         <div class="section-head">
           <div>
-            <h2>四视图控制</h2>
-            <p class="subhead">分别设置四个标准产品视角：正面主视、背面视图、顶视图、三分之四视图。</p>
+            <h2 id="viewControlTitle">多视图控制</h2>
+            <p id="viewControlSubhead" class="subhead">选择模式后，下方将显示对应的视角列表，每个视角可单独生成。</p>
           </div>
           <button id="refreshGallery" type="button" class="mini-button">刷新结果</button>
         </div>
@@ -97,6 +101,7 @@
 
         <div class="section-head section-head-tight">
           <h2>单角度图片</h2>
+          <p class="subhead">按视角分区显示，单独生成或完整生成的结果会出现在对应视角区域</p>
         </div>
         <div id="singleGallery" class="single-gallery"></div>
         <div id="singleEmpty" class="empty-state">尚未生成单角度图片</div>
